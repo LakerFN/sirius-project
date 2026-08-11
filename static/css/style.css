@@ -2716,7 +2716,7 @@ body.is-key-flash .bg-glow {
     font-size: 0.58rem;
   }
 
-  .ctrl-btn--play {
+  .controls .ctrl-btn--play {
     grid-area: play;
     justify-self: start;
     width: auto;
@@ -2855,6 +2855,12 @@ body.is-key-flash .bg-glow {
 
   .finale-actions .ctrl-btn {
     min-width: 7.5rem;
+    min-height: 2.75rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    font-family: var(--font-body);
+    font-weight: 800;
   }
 }
 
@@ -3044,7 +3050,7 @@ body.is-key-flash .bg-glow {
     padding: 0.12rem 0.04rem;
   }
 
-  .ctrl-btn--play,
+  .controls .ctrl-btn--play,
   #share-frame-btn {
     min-height: 1.65rem;
     padding: 0.28rem 0.45rem;

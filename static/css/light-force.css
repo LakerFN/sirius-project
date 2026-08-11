@@ -171,7 +171,7 @@ html[data-theme="light"] #year-slider::-moz-range-thumb {
     min-height: 2.7rem;
   }
 
-  html[data-theme="light"] .ctrl-btn--play,
+  html[data-theme="light"] .controls .ctrl-btn--play,
   html[data-theme="light"] #share-frame-btn {
     min-height: 1.85rem;
   }
@@ -186,7 +186,7 @@ html[data-theme="light"] #year-slider::-moz-range-thumb {
     background: #f0ecef !important;
   }
 
-  html[data-theme="light"] .ctrl-btn--play,
+  html[data-theme="light"] .controls .ctrl-btn--play,
   html[data-theme="light"] #share-frame-btn {
     min-height: 1.65rem;
   }
