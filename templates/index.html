@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Машина времени-35</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("mt35-theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css?v=20260311y" />
+  <link rel="stylesheet" href="/static/css/light-force.css?v=20260311y" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="/static/js/app.js?v=20260312a" defer></script>
+</head>
+<body data-view="lukoil">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div id="theme-veil" class="theme-veil" aria-hidden="true"></div>
+
+  <header
+    class="site-header"
+    id="site-header"
+    title="Нажмите на шапку, чтобы сменить тему"
+  >
+    <div class="site-header-inner">
+      <div class="site-header-brand">
+        <p class="brand">Машина времени-35</p>
+        <p class="tagline">Нефтянка и Сириус: 35 лет технологий</p>
+      </div>
+    </div>
+
+    <div class="site-header-left">
+      <div class="site-header-logos">
+        <button
+          type="button"
+          class="site-header-logo-btn"
+          data-view="lukoil"
+          aria-label="Открыть раздел ЛУКОЙЛ"
+          title="ЛУКОЙЛ"
+        >
+          <img
+            class="site-header-logo"
+            src="/static/img/header-luk.png"
+            alt=""
+            width="64"
+            height="64"
+          />
+        </button>
+        <button
+          type="button"
+          class="site-header-logo-btn"
+          data-view="sirius"
+          aria-label="Открыть раздел Сириус"
+          title="Сириус"
+        >
+          <img
+            class="site-header-logo"
+            src="/static/img/header-sirius.png"
+            alt=""
+            width="64"
+            height="64"
+          />
+        </button>
+      </div>
+
+      <aside class="luk-name-story" aria-label="История названия ЛУКОЙЛ">
+        <p class="luk-name-story-kicker">Откуда название</p>
+        <p class="luk-name-story-letters">
+          <span class="luk-name-part"><b>Л</b>ангепас</span>
+          <span class="luk-name-part"><b>У</b>рай</span>
+          <span class="luk-name-part"><b>К</b>огалым</span>
+          <span class="luk-name-part luk-name-part--oil">+ oil</span>
+        </p>
+        <p class="luk-name-story-text">
+          Название предложил Равиль Маганов в 1991&nbsp;году
+        </p>
+      </aside>
+    </div>
+
+    <div class="header-about-links">
+      <button
+        type="button"
+        id="about-lukoil-open"
+        class="about-camp-link about-camp-link--lukoil"
+        aria-haspopup="dialog"
+        aria-controls="about-lukoil-modal"
+      >
+        о лукойле
+      </button>
+      <button
+        type="button"
+        id="about-camp-open"
+        class="about-camp-link about-camp-link--sirius"
+        aria-haspopup="dialog"
+        aria-controls="about-camp-modal"
+      >
+        о лагере
+      </button>
+    </div>
+
+    <button
+      type="button"
+      id="header-toggle"
+      class="header-toggle"
+      aria-expanded="true"
+      aria-controls="site-header"
+      title="Скрыть шапку"
+    >
+      <span class="header-toggle-arrow" aria-hidden="true"></span>
+      <span class="visually-hidden" id="header-toggle-label">Скрыть шапку</span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <h1 id="year-display" class="year-display">1991</h1>
+    <p id="era-label" class="era-label">Эпоха первых вышек</p>
+
+    <nav class="view-tabs" role="tablist" aria-label="Разделы">
+      <button
+        type="button"
+        class="view-tab view-tab--lukoil is-active"
+        role="tab"
+        id="tab-lukoil"
+        aria-selected="true"
+        aria-controls="panel-lukoil"
+        data-view="lukoil"
+      >
+        ЛУКОЙЛ
+      </button>
+      <button
+        type="button"
+        class="view-tab view-tab--compare"
+        role="tab"
+        id="tab-compare"
+        aria-selected="false"
+        aria-controls="panel-lukoil panel-sirius"
+        data-view="compare"
+      >
+        Сравнение
+      </button>
+      <button
+        type="button"
+        class="view-tab view-tab--sirius"
+        role="tab"
+        id="tab-sirius"
+        aria-selected="false"
+        aria-controls="panel-sirius"
+        data-view="sirius"
+      >
+        СИРИУС
+      </button>
+    </nav>
+
+    <p id="parallel-badge" class="parallel-badge" hidden></p>
+
+    <div class="dual-fate" id="dual-fate" aria-label="Две судьбы одного года">
+      <p class="dual-fate-kicker">Две судьбы одной точки</p>
+      <div class="dual-fate-grid">
+        <button type="button" class="dual-fate-card dual-fate-card--luk" data-view="lukoil" id="dual-fate-luk">
+          <span class="dual-fate-label">ЛУКОЙЛ</span>
+          <span class="dual-fate-title" id="dual-fate-luk-title">—</span>
+        </button>
+        <div class="dual-fate-axis" aria-hidden="true">
+          <span class="dual-fate-dot"></span>
+          <span class="dual-fate-line"></span>
+          <span class="dual-fate-dot"></span>
+        </div>
+        <button type="button" class="dual-fate-card dual-fate-card--sirius" data-view="sirius" id="dual-fate-sirius">
+          <span class="dual-fate-label">СИРИУС</span>
+          <span class="dual-fate-title" id="dual-fate-sirius-title">—</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <main class="page" id="page">
+    <p class="compare-swipe-hint" id="compare-swipe-hint" hidden>Листайте вбок: ЛУКОЙЛ ↔ Сириус</p>
+    <aside class="compare-parallel" id="compare-parallel" hidden>
+      <p class="compare-parallel-kicker">В этом году одновременно</p>
+      <div class="compare-parallel-grid">
+        <div class="compare-parallel-col compare-parallel-col--luk">
+          <p class="compare-parallel-label">ЛУКОЙЛ</p>
+          <p class="compare-parallel-title" id="compare-parallel-lukoil"></p>
+        </div>
+        <button type="button" class="compare-echo" id="compare-echo" hidden title="Перейти по цепочке эха">
+          <span class="compare-echo-line" aria-hidden="true"></span>
+          <span class="compare-echo-label">эхо</span>
+          <span class="compare-echo-line" aria-hidden="true"></span>
+        </button>
+        <div class="compare-parallel-col compare-parallel-col--sirius">
+          <p class="compare-parallel-label">СИРИУС</p>
+          <p class="compare-parallel-title" id="compare-parallel-sirius"></p>
+        </div>
+      </div>
+      <button type="button" class="compare-echo-note" id="compare-echo-note" hidden></button>
+    </aside>
+    <section
+      id="panel-lukoil"
+      class="section-block is-active"
+      role="tabpanel"
+      aria-labelledby="tab-lukoil"
+    >
+      <div class="compare-heading compare-heading--luk" hidden>ЛУКОЙЛ</div>
+      <div class="layout">
+        <article class="card-panel" aria-live="polite">
+          <p class="news-kicker">Новости ЛУКОЙЛ · выбранный год</p>
+          <figure id="year-photo" class="year-photo" hidden>
+            <img
+              id="year-photo-img"
+              alt=""
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+            <figcaption id="year-photo-cap" class="year-photo-cap"></figcaption>
+          </figure>
+          <div id="lukoil-feed" class="news-feed">
+            <article class="news-item">
+              <button type="button" class="news-toggle" aria-expanded="false" disabled>
+                <span class="news-toggle-text">Загрузка…</span>
+                <span class="news-toggle-icon" aria-hidden="true"></span>
+              </button>
+            </article>
+          </div>
+
+      <aside class="geo-map" id="geo-map" aria-label="Карта точек">
+        <p class="geo-map-kicker">Карта точек</p>
+        <div class="geo-map-stage">
+          <svg class="geo-map-svg" viewBox="0 0 360 160" role="img" aria-hidden="true">
+            <defs>
+              <linearGradient id="geo-land" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgba(225, 29, 56, 0.14)" />
+                <stop offset="100%" stop-color="rgba(201, 160, 255, 0.14)" />
+              </linearGradient>
+            </defs>
+            <path
+              class="geo-map-land"
+              d="M28 78 C48 42, 95 28, 140 36 C175 42, 195 58, 220 52 C255 44, 290 38, 328 48 C342 54, 348 72, 338 88 C320 118, 270 132, 220 128 C175 124, 150 108, 118 112 C78 118, 52 128, 34 108 C22 96, 18 86, 28 78 Z"
+              fill="url(#geo-land)"
+            />
+            <path
+              class="geo-map-outline"
+              d="M28 78 C48 42, 95 28, 140 36 C175 42, 195 58, 220 52 C255 44, 290 38, 328 48 C342 54, 348 72, 338 88 C320 118, 270 132, 220 128 C175 124, 150 108, 118 112 C78 118, 52 128, 34 108 C22 96, 18 86, 28 78 Z"
+              fill="none"
+            />
+          </svg>
+
+          <button
+            type="button"
+            class="geo-point geo-point--lukoil geo-point--compact"
+            data-point="langepas"
+            style="left: 24%; top: 28%"
+            title="Лангепас — «Л» в ЛУКОЙЛ"
+          >
+            <span class="geo-point-dot" aria-hidden="true"></span>
+            <span class="geo-point-label">Лангепас</span>
+          </button>
+          <button
+            type="button"
+            class="geo-point geo-point--lukoil geo-point--compact"
+            data-point="uray"
+            style="left: 14%; top: 50%"
+            title="Урай — «У» в ЛУКОЙЛ"
+          >
+            <span class="geo-point-dot" aria-hidden="true"></span>
+            <span class="geo-point-label">Урай</span>
+          </button>
+          <button
+            type="button"
+            class="geo-point geo-point--lukoil geo-point--compact"
+            data-point="kogalym"
+            style="left: 38%; top: 40%"
+            title="Когалым — «К» в ЛУКОЙЛ"
+          >
+            <span class="geo-point-dot" aria-hidden="true"></span>
+            <span class="geo-point-label">Когалым</span>
+          </button>
+          <button
+            type="button"
+            class="geo-point geo-point--lukoil"
+            data-point="perm"
+            style="left: 56%; top: 48%"
+            title="Пермь"
+          >
+            <span class="geo-point-dot" aria-hidden="true"></span>
+            <span class="geo-point-label">Пермь</span>
+          </button>
+          <button
+            type="button"
+            class="geo-point geo-point--sirius"
+            data-point="sochi"
+            style="left: 22%; top: 68%"
+            title="Сочи / Сириус"
+          >
+            <span class="geo-point-dot" aria-hidden="true"></span>
+            <span class="geo-point-label">Сочи</span>
+          </button>
+        </div>
+        <p class="geo-map-caption" id="geo-map-caption">Выберите точку на карте</p>
+      </aside>
+
+        </article>
+
+        <article class="chart-panel">
+          <div class="kpi-row">
+            <div class="kpi">
+              <p class="barrels-label">Цена барреля</p>
+              <p id="barrels-counter" class="barrels-counter">0</p>
+              <p class="barrels-unit">$/баррель</p>
+            </div>
+            <div class="kpi">
+              <p class="barrels-label">Добыча ЛУКОЙЛ</p>
+              <p id="production-counter" class="barrels-counter barrels-counter--prod">0</p>
+              <p class="barrels-unit">млн т / год</p>
+            </div>
+          </div>
+          <div class="chart-toggle" role="group" aria-label="Метрика графика">
+            <button type="button" class="chart-toggle-btn is-active" data-metric="price">
+              Цена барреля
+            </button>
+            <button type="button" class="chart-toggle-btn" data-metric="production">
+              Добыча млн т
+            </button>
+          </div>
+          <div class="chart-head">
+            <h3 id="oil-chart-title" class="chart-title">Цена барреля нефти</h3>
+            <p id="oil-chart-sub" class="chart-sub">Котировки до выбранного года</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="oil-chart" aria-label="График цены нефти или добычи"></canvas>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section
+      id="panel-sirius"
+      class="section-block"
+      role="tabpanel"
+      aria-labelledby="tab-sirius"
+      hidden
+    >
+      <div class="compare-heading compare-heading--sirius" hidden>СИРИУС</div>
+      <div class="layout">
+        <article class="card-panel" aria-live="polite">
+          <p class="news-kicker">От Олимпиады к Сириусу · выбранный год</p>
+          <figure id="sirius-year-photo" class="year-photo" hidden>
+            <img
+              id="sirius-year-photo-img"
+              alt=""
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+            <figcaption id="sirius-year-photo-cap" class="year-photo-cap"></figcaption>
+          </figure>
+          <div id="sirius-feed" class="news-feed">
+            <article class="news-item">
+              <button type="button" class="news-toggle" aria-expanded="false" disabled>
+                <span class="news-toggle-text">Загрузка…</span>
+                <span class="news-toggle-icon" aria-hidden="true"></span>
+              </button>
+            </article>
+          </div>
+        </article>
+
+        <article class="chart-panel">
+          <div class="kpi-row">
+            <div class="kpi">
+              <p class="barrels-label">Индекс технологий</p>
+              <p id="tech-counter" class="barrels-counter">—</p>
+              <p class="barrels-unit">развитие экосистемы</p>
+            </div>
+          </div>
+          <div class="chart-head">
+            <h3 class="chart-title">Индекс технологий</h3>
+            <p class="chart-sub">Спортивные объекты и Сириус с 2007 года</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="tech-chart" aria-label="График индекса технологий Сириуса"></canvas>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="controls">
+    <div class="controls-row">
+      <div class="play-speed" id="play-speed" role="group" aria-label="Скорость прокрутки">
+        <button type="button" class="play-speed-btn" data-speed="0.1" aria-pressed="false" title="50 сек на год">0.1×</button>
+        <button type="button" class="play-speed-btn" data-speed="0.5" aria-pressed="false" title="10 сек на год">0.5×</button>
+        <button type="button" class="play-speed-btn is-active" data-speed="1" aria-pressed="true" title="5 сек на год">1×</button>
+        <button type="button" class="play-speed-btn" data-speed="2" aria-pressed="false" title="2,5 сек на год">2×</button>
+        <button type="button" class="play-speed-btn" data-speed="3" aria-pressed="false" title="≈1,7 сек на год">3×</button>
+        <button type="button" class="play-speed-btn" data-speed="5" aria-pressed="false" title="1 сек на год">5×</button>
+      </div>
+
+      <button type="button" id="play-btn" class="ctrl-btn ctrl-btn--play" aria-pressed="false" title="Автопрокрутка лет">
+        <span class="play-icon" aria-hidden="true"></span>
+        <span id="play-label">Play</span>
+      </button>
+
+      <button type="button" id="share-frame-btn" class="ctrl-btn" title="Сохранить кадр года">
+        Кадр
+      </button>
+
+      <div class="slider-block">
+        <label class="slider-label" for="year-slider">Лента времени</label>
+        <input
+          id="year-slider"
+          type="range"
+          min="1991"
+          max="2026"
+          step="any"
+          value="1991"
+        />
+        <div class="slider-marks" id="slider-marks"></div>
+      </div>
+    </div>
+  </footer>
+
+  <audio id="tick-sound" preload="auto" src="/static/audio/tick.wav"></audio>
+
+  <div id="intro-overlay" class="intro-overlay" hidden>
+    <div class="intro-card">
+      <p class="intro-brand">Машина времени-35</p>
+      <p id="intro-year" class="intro-year">1991</p>
+      <p class="intro-sub">35 лет технологий: от первых вышек к Сириусу</p>
+      <button type="button" id="intro-skip" class="intro-skip">Пропустить</button>
+    </div>
+  </div>
+
+  <div id="finale-modal" class="finale-modal" hidden>
+    <div class="finale-card finale-card--wide" role="dialog" aria-labelledby="finale-title">
+      <p class="finale-kicker">2026</p>
+      <h2 id="finale-title" class="finale-title">Финиш ленты времени</h2>
+      <p class="finale-text" id="finale-intro-text">
+        35 лет истории ЛУКОЙЛ и путь от олимпийских арен к федеральной территории «Сириус».
+        Проверьте себя в коротком квизе.
+      </p>
+
+      <div id="quiz-panel" class="quiz-panel">
+        <p class="quiz-progress" id="quiz-progress">Вопрос 1 / 3</p>
+        <p class="quiz-question" id="quiz-question"></p>
+        <div class="quiz-options" id="quiz-options"></div>
+      </div>
+
+      <div id="quiz-result" class="quiz-result" hidden>
+        <p class="quiz-score" id="quiz-score"></p>
+        <p class="quiz-verdict" id="quiz-verdict"></p>
+      </div>
+
+      <div class="finale-actions">
+        <button type="button" id="finale-replay" class="ctrl-btn">Сначала</button>
+        <button type="button" id="finale-close" class="ctrl-btn ctrl-btn--play">Выйти</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="share-canvas" class="share-canvas" width="1080" height="1350" hidden aria-hidden="true"></canvas>
+
+  <div id="about-camp-modal" class="about-camp-modal" hidden>
+    <div
+      class="about-camp-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="about-camp-title"
+    >
+      <button type="button" id="about-camp-close" class="about-camp-close" aria-label="Закрыть">
+        ×
+      </button>
+      <p class="about-camp-kicker">Образовательный центр «Сириус»</p>
+      <h2 id="about-camp-title" class="about-camp-title">О лагере</h2>
+      <div class="about-camp-body">
+        <p>
+          Образовательный центр «Сириус» создан Образовательным Фондом «Талант и успех»
+          на базе олимпийской инфраструктуры по инициативе Президента РФ В.В.&nbsp;Путина.
+          Фонд учреждён 24&nbsp;декабря 2014&nbsp;г. выдающимися деятелями науки, спорта и искусства.
+        </p>
+        <p>
+          Цель центра — раннее выявление, развитие и дальнейшая профессиональная поддержка
+          одарённых детей в области искусств, спорта, естественнонаучных дисциплин
+          и технического творчества.
+        </p>
+        <ul>
+          <li>Работает круглый год; проезд и пребывание для детей бесплатные</li>
+          <li>Ежемесячно около 800 школьников 10–17&nbsp;лет из всех регионов России</li>
+          <li>Программа на 24&nbsp;дня: занятия, досуг, мастер-классы и оздоровление</li>
+          <li>Более 100 преподавателей и тренеров сопровождают каждую смену</li>
+        </ul>
+        <p class="about-camp-note">
+          Источник:
+          <a href="https://sochisirius.ru/o-siriuse/obschaja-informatsija" target="_blank" rel="noopener noreferrer">
+            sochisirius.ru — Общая информация
+          </a>
+        </p>
+      </div>
+      <a
+        class="about-camp-site"
+        href="https://sochisirius.ru/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Перейти на сайт Сириуса
+      </a>
+    </div>
+  </div>
+
+  <div id="about-lukoil-modal" class="about-camp-modal" hidden>
+    <div
+      class="about-camp-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="about-lukoil-title"
+    >
+      <button type="button" id="about-lukoil-close" class="about-camp-close" aria-label="Закрыть">
+        ×
+      </button>
+      <p class="about-camp-kicker">ПАО «ЛУКОЙЛ»</p>
+      <h2 id="about-lukoil-title" class="about-camp-title">О ЛУКОЙЛ</h2>
+      <div class="about-camp-body">
+        <p>
+          ЛУКОЙЛ — одна из крупнейших вертикально интегрированных нефтегазовых компаний мира.
+          История современного бренда отсчитывается с 1991&nbsp;года, когда было создано
+          государственное нефтяное концерн-объединение «ЛангепасУрайКогалымнефть».
+        </p>
+        <p>
+          Компания объединяет разведку и добычу, переработку, нефтехимию, транспорт и сбыт —
+          от скважины до АЗС. За 35&nbsp;лет ЛУКОЙЛ прошёл путь от постсоветского объединения
+          к международной группе с цифровыми технологиями и проектами по всему миру.
+        </p>
+        <ul>
+          <li>1991 — создание концерна «ЛУКОЙЛ»</li>
+          <li>Вертикальная интеграция: upstream + downstream</li>
+          <li>Ключевые показатели на ленте: цена барреля и добыча млн&nbsp;т</li>
+          <li>Источники событий — официальная история lukoil.ru</li>
+        </ul>
+        <p class="about-camp-note">
+          Источник:
+          <a href="https://lukoil.ru/Company/history" target="_blank" rel="noopener noreferrer">
+            lukoil.ru — История компании
+          </a>
+        </p>
+      </div>
+      <a
+        class="about-camp-site"
+        href="https://lukoil.ru/Company/history"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Перейти к истории ЛУКОЙЛ
+      </a>
+    </div>
+  </div>
+
+  <p class="year-jump-hint" id="year-jump-hint" hidden aria-live="polite"></p>
+
+  <div id="theme-tip" class="theme-tip" hidden role="status" aria-live="polite">
+    <p class="theme-tip-text">
+      Подсказка: нажмите на шапку (на название), чтобы включить светлую или тёмную тему
+    </p>
+    <button type="button" id="theme-tip-close" class="theme-tip-close" aria-label="Закрыть подсказку">
+      Понятно
+    </button>
+  </div>
+</body>
+</html>

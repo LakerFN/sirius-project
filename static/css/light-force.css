@@ -1,0 +1,183 @@
+/* Light theme — softer / ~1.5× darker than pure white */
+html[data-theme="light"] body,
+html[data-theme="light"] body[data-view="lukoil"] {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -15%, rgba(220, 100, 130, 0.22), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(210, 90, 120, 0.14), transparent 65%),
+    linear-gradient(180deg, #ebe6e9 0%, #e4dcdf 50%, #ddd6da 100%) !important;
+  color: #1a0a10 !important;
+  transition: background 0.7s ease, color 0.55s ease !important;
+}
+
+html[data-theme="light"] body[data-view="sirius"] {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -15%, rgba(140, 100, 210, 0.2), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(120, 90, 200, 0.14), transparent 65%),
+    linear-gradient(180deg, #e6e2f0 0%, #ddd7eb 50%, #d4cde4 100%) !important;
+  color: #1a1030 !important;
+}
+
+html[data-theme="light"] body[data-view="compare"] {
+  background:
+    radial-gradient(ellipse 55% 45% at 0% -5%, rgba(210, 90, 130, 0.16), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 100% -5%, rgba(140, 100, 210, 0.14), transparent 60%),
+    linear-gradient(180deg, #e9e4ea 0%, #e0d8e2 50%, #d8d0da 100%) !important;
+  color: #1a0e16 !important;
+}
+
+html[data-theme="light"] .bg-glow {
+  opacity: 0.22 !important;
+  filter: brightness(1.05) saturate(0.75) !important;
+}
+
+html[data-theme="light"] .site-header,
+html[data-theme="light"] .controls,
+html[data-theme="light"] .card-panel,
+html[data-theme="light"] .chart-panel,
+html[data-theme="light"] .about-camp-card,
+html[data-theme="light"] .intro-card,
+html[data-theme="light"] .finale-card,
+html[data-theme="light"] .view-tab,
+html[data-theme="light"] .ctrl-btn,
+html[data-theme="light"] .header-toggle,
+html[data-theme="light"] .year-jump-hint,
+html[data-theme="light"] .parallel-badge,
+html[data-theme="light"] .year-photo-cap,
+html[data-theme="light"] .theme-tip {
+  background: #f0ecef !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+  transition:
+    background 0.65s ease,
+    border-color 0.55s ease,
+    box-shadow 0.55s ease,
+    color 0.55s ease !important;
+}
+
+html[data-theme="light"] .site-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme="light"] .controls {
+  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme="light"] .news-item {
+  background: #e2dde2 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme="light"] .news-item.is-open,
+html[data-theme="light"] .year-photo {
+  background: #ebe6ea !important;
+}
+
+html[data-theme="light"] .kpi {
+  background: #e8e4e7 !important;
+}
+
+html[data-theme="light"] .dual-fate,
+html[data-theme="light"] .dual-fate-card,
+html[data-theme="light"] .quiz-option,
+html[data-theme="light"] .geo-map,
+html[data-theme="light"] .luk-name-story {
+  background: #f0ecef !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+html[data-theme="light"] .compare-parallel {
+  background: linear-gradient(90deg, #eadde2, #ddd6eb) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme="light"] .intro-overlay,
+html[data-theme="light"] .finale-modal,
+html[data-theme="light"] .about-camp-modal {
+  background: rgba(220, 214, 220, 0.82) !important;
+}
+
+html[data-theme="light"] .view-tab--lukoil {
+  color: #c41028 !important;
+}
+
+html[data-theme="light"] .view-tab--sirius {
+  color: #6b3bb8 !important;
+}
+
+html[data-theme="light"] .view-tab--compare {
+  color: #b8457a !important;
+}
+
+html[data-theme="light"] .view-tab--lukoil.is-active {
+  background: #e11d38 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .view-tab--sirius.is-active {
+  background: #7b4ad4 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .view-tab--compare.is-active {
+  background: #d04a88 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .play-speed {
+  background: #f0ecef !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+html[data-theme="light"] .play-speed-btn.is-active {
+  background: rgba(196, 16, 40, 0.14) !important;
+  color: #c41028 !important;
+}
+
+html[data-theme="light"] .news-link {
+  background: #f0ecef !important;
+  color: #c41028 !important;
+  border-color: #c41028 !important;
+  box-shadow: 0 -8px 16px rgba(240, 236, 239, 0.9) !important;
+}
+
+html[data-theme="light"] .about-camp-link--lukoil {
+  background: #f0ecef !important;
+  color: #c41028 !important;
+  border-color: #c41028 !important;
+}
+
+html[data-theme="light"] .about-camp-link--sirius {
+  background: #f0ecef !important;
+  color: #6b3bb8 !important;
+  border-color: #6b3bb8 !important;
+}
+
+html[data-theme="light"] #year-slider::-webkit-slider-thumb,
+html[data-theme="light"] #year-slider::-moz-range-thumb {
+  border-color: #f0ecef !important;
+}
+
+@media (max-width: 860px) {
+  html[data-theme="light"] .controls {
+    background:
+      linear-gradient(180deg, transparent, rgba(240, 236, 239, 0.88) 24%, #f0ecef) !important;
+  }
+
+  html[data-theme="light"] .play-speed {
+    background: #ebe6ea !important;
+  }
+
+  html[data-theme="light"] .view-tab {
+    min-height: 2.65rem;
+  }
+
+  html[data-theme="light"] .ctrl-btn {
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 520px) {
+  html[data-theme="light"] .about-camp-link {
+    background: #f0ecef !important;
+  }
+}
