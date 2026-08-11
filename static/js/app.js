@@ -220,6 +220,10 @@
   let quizCorrect = 0;
   let audioCtx = null;
   let playSpeed = 1;
+  let audioUnlocked = false;
+  let tickBuffer = null;
+  let tickBufferLoading = null;
+  let lastTickAt = 0;
 
   function activeMinYear() {
     return currentView === "sirius" ? SIRIUS_MIN_YEAR : MIN_YEAR;
@@ -463,27 +467,152 @@
     });
   }
 
+  function getAudioContext() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!audioCtx) audioCtx = new AC();
+    return audioCtx;
+  }
+
+  function decodeAudioData(ctx, data) {
+    return new Promise((resolve, reject) => {
+      const copy = data.slice(0);
+      let settled = false;
+      const ok = (buf) => {
+        if (settled) return;
+        settled = true;
+        resolve(buf);
+      };
+      const fail = (err) => {
+        if (settled) return;
+        settled = true;
+        reject(err || new Error("decodeAudioData failed"));
+      };
+      try {
+        const ret = ctx.decodeAudioData(copy, ok, fail);
+        if (ret && typeof ret.then === "function") ret.then(ok, fail);
+      } catch (err) {
+        fail(err);
+      }
+    });
+  }
+
+  async function loadTickBuffer() {
+    const ctx = getAudioContext();
+    if (!ctx || tickBuffer) return tickBuffer;
+    if (tickBufferLoading) return tickBufferLoading;
+    tickBufferLoading = (async () => {
+      const src =
+        (tickSound && (tickSound.currentSrc || tickSound.getAttribute("src"))) ||
+        "/static/audio/tick.wav";
+      const res = await fetch(src);
+      if (!res.ok) throw new Error("tick fetch failed");
+      const arr = await res.arrayBuffer();
+      tickBuffer = await decodeAudioData(ctx, arr);
+      return tickBuffer;
+    })().catch(() => {
+      tickBufferLoading = null;
+      return null;
+    });
+    return tickBufferLoading;
+  }
+
+  async function unlockAudio() {
+    if (audioUnlocked) {
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === "suspended") {
+        try {
+          await ctx.resume();
+        } catch (_) {}
+      }
+      return;
+    }
+    try {
+      const ctx = getAudioContext();
+      if (ctx) {
+        if (ctx.state === "suspended") await ctx.resume();
+        // Silent prime — required on iOS before later BufferSource ticks work.
+        const silent = ctx.createBuffer(1, 1, ctx.sampleRate || 22050);
+        const src = ctx.createBufferSource();
+        src.buffer = silent;
+        src.connect(ctx.destination);
+        src.start(0);
+        loadTickBuffer();
+      }
+      if (tickSound) {
+        const prevVol = tickSound.volume;
+        tickSound.muted = true;
+        tickSound.volume = 0;
+        try {
+          const p = tickSound.play();
+          if (p) await p.catch(() => {});
+        } catch (_) {}
+        try {
+          tickSound.pause();
+          tickSound.currentTime = 0;
+        } catch (_) {}
+        tickSound.muted = false;
+        tickSound.volume = prevVol || 0.32;
+      }
+      audioUnlocked = true;
+    } catch (_) {
+      /* keep trying on next gesture */
+    }
+  }
+
+  function playTickViaWebAudio() {
+    const ctx = getAudioContext();
+    if (!ctx || !tickBuffer) return false;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+    const src = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.32;
+    src.buffer = tickBuffer;
+    src.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(0);
+    return true;
+  }
+
+  function playTickFallbackBeep() {
+    const ctx = getAudioContext();
+    if (!ctx) return false;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.12, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.07);
+    return true;
+  }
+
   function playKeyPulseSound() {
     try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) {
+      const ctx = getAudioContext();
+      if (!ctx) {
         playTick();
         return;
       }
-      if (!audioCtx) audioCtx = new AC();
-      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
-      const now = audioCtx.currentTime;
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+      const now = ctx.currentTime;
       const tones = [392, 523.25, 659.25];
       tones.forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.type = "sine";
         osc.frequency.value = freq;
         gain.gain.setValueAtTime(0.0001, now);
         gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02 + i * 0.04);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28 + i * 0.05);
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(ctx.destination);
         osc.start(now + i * 0.045);
         osc.stop(now + 0.35 + i * 0.05);
       });
@@ -1050,14 +1179,37 @@
   }
 
   function playTick() {
-    if (!tickSound) return;
+    const now = performance.now();
+    // Avoid stacking dozens of overlapping ticks while scrubbing fast on mobile.
+    if (now - lastTickAt < 45) return;
+    lastTickAt = now;
+
     try {
+      if (playTickViaWebAudio()) return;
+      if (tickBufferLoading) {
+        // Buffer still loading after unlock — short synthetic click so phone isn't silent.
+        if (playTickFallbackBeep()) return;
+      }
+      if (!tickSound) return;
       tickSound.volume = 0.32;
-      tickSound.currentTime = 0;
+      tickSound.muted = false;
+      try {
+        tickSound.currentTime = 0;
+      } catch (_) {}
       const playPromise = tickSound.play();
-      if (playPromise) playPromise.catch(() => {});
+      if (playPromise) {
+        playPromise.catch(() => {
+          unlockAudio().then(() => {
+            if (!playTickViaWebAudio()) playTickFallbackBeep();
+          });
+        });
+      }
     } catch (_) {
-      /* ignore autoplay block */
+      try {
+        playTickFallbackBeep();
+      } catch (__) {
+        /* ignore autoplay block */
+      }
     }
   }
 
@@ -1424,6 +1576,13 @@
   function bindControls() {
     buildMilestones();
 
+    const armAudioUnlock = () => {
+      unlockAudio();
+    };
+    ["pointerdown", "touchstart", "click"].forEach((type) => {
+      document.addEventListener(type, armAudioUnlock, { capture: true, passive: true, once: true });
+    });
+
     const endDrag = () => {
       if (!sliderDragging) return;
       sliderDragging = false;
@@ -1435,16 +1594,21 @@
     };
 
     slider.addEventListener("pointerdown", () => {
+      unlockAudio();
       stopPlay();
       stopSliderAnim();
       sliderDragging = true;
     });
+    slider.addEventListener("touchstart", () => {
+      unlockAudio();
+    }, { passive: true });
 
     slider.addEventListener("pointerup", endDrag);
     slider.addEventListener("pointercancel", endDrag);
     slider.addEventListener("change", endDrag);
 
     slider.addEventListener("input", () => {
+      unlockAudio();
       stopPlay();
       const y = clampYear(slider.value);
       if (y !== lastYear) {
@@ -1452,7 +1616,10 @@
       }
     });
 
-    playBtn.addEventListener("click", togglePlay);
+    playBtn.addEventListener("click", () => {
+      unlockAudio();
+      togglePlay();
+    });
     if (playSpeedGroup) {
       playSpeedGroup.querySelectorAll(".play-speed-btn").forEach((btn) => {
         btn.addEventListener("click", () => setPlaySpeed(btn.dataset.speed));
