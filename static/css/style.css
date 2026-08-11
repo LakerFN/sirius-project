@@ -689,6 +689,10 @@ body[data-view="compare"] .about-camp-link--sirius {
   outline-offset: 3px;
 }
 
+.about-camp-link-short {
+  display: none;
+}
+
 .hero {
   position: relative;
   z-index: 1;
@@ -2243,121 +2247,197 @@ body.is-key-flash .bg-glow {
 
 @media (max-width: 860px) {
   :root {
-    --controls-h: 12.5rem;
+    --controls-h: 11.75rem;
+  }
+
+  html,
+  body {
+    background-attachment: scroll;
   }
 
   body {
-    padding-bottom: calc(var(--controls-h) + 1.25rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--controls-h) + 1.1rem + env(safe-area-inset-bottom, 0px));
   }
 
-  /* —— Header —— */
+  button,
+  .ctrl-btn,
+  .view-tab,
+  .about-camp-link,
+  .site-header-logo-btn,
+  .news-toggle,
+  .geo-point,
+  .play-speed-btn {
+    touch-action: manipulation;
+  }
+
+  /* —— Header: real grid, no absolute squeeze —— */
   .site-header {
-    padding: 0.55rem 0.7rem 0.75rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "left brand about";
+    align-items: center;
+    column-gap: 0.45rem;
+    row-gap: 0.35rem;
+    padding:
+      calc(0.55rem + env(safe-area-inset-top, 0px))
+      0.7rem
+      0.85rem;
+  }
+
+  .site-header.is-collapsed {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  .site-header.is-collapsed .site-header-left,
+  .site-header.is-collapsed .header-about-links,
+  .site-header.is-collapsed .site-header-inner {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    opacity: 0;
+    pointer-events: none;
   }
 
   .site-header-inner {
+    grid-area: brand;
+    width: auto;
+    max-width: none;
+    margin: 0;
     max-height: none;
     overflow: visible;
-    min-height: 2.6rem;
-    padding-top: 0.1rem;
+    min-height: 0;
+    justify-content: center;
   }
 
   .site-header-brand {
     text-align: center;
-    padding: 0 4.75rem;
+    padding: 0;
+    width: 100%;
   }
 
   .brand {
-    font-size: clamp(1.15rem, 4.8vw, 1.55rem);
-    line-height: 1.1;
+    font-size: clamp(1.05rem, 4.4vw, 1.4rem);
+    line-height: 1.12;
   }
 
   .tagline {
-    font-size: 0.64rem;
-    margin-top: 0.18rem;
+    font-size: 0.62rem;
+    margin-top: 0.14rem;
     letter-spacing: 0.01em;
+    line-height: 1.25;
   }
 
   .site-header-left {
-    left: 0.55rem;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    grid-area: left;
     max-width: none;
     gap: 0.3rem;
     align-items: center;
+    z-index: auto;
   }
 
   .luk-name-story {
     display: none;
   }
 
-  .site-header-logo {
-    height: 1.9rem;
-    border-radius: 6px;
-  }
-
-  .header-about-links {
-    right: 0.55rem;
-    top: 50%;
-    transform: translateY(-50%);
-    flex-direction: row;
-    align-items: center;
+  .site-header-logos {
     gap: 0.3rem;
   }
 
+  .site-header-logo {
+    height: 2.15rem;
+    width: 2.15rem;
+    object-fit: cover;
+    border-radius: 7px;
+  }
+
+  .header-about-links {
+    position: static;
+    right: auto;
+    top: auto;
+    transform: none;
+    grid-area: about;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+    z-index: auto;
+  }
+
+  .about-camp-link-full {
+    display: none;
+  }
+
+  .about-camp-link-short {
+    display: inline;
+  }
+
   .about-camp-link {
-    padding: 0.38rem 0.5rem;
-    font-size: 0.58rem;
+    padding: 0.42rem 0.55rem;
+    font-size: 0.62rem;
     border-radius: 8px;
     text-align: center;
-    min-height: 2rem;
+    min-height: 2.1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
+  .header-toggle {
+    bottom: -1px;
+  }
+
   /* —— Hero —— */
   .hero {
-    padding: 0.75rem 0.85rem 0.35rem;
+    padding: 0.85rem 0.85rem 0.4rem;
   }
 
   .year-display {
-    font-size: clamp(3rem, 16vw, 4.8rem);
+    font-size: clamp(3.1rem, 15vw, 4.6rem);
   }
 
   .era-label {
-    margin-top: 0.45rem;
+    margin-top: 0.4rem;
     font-size: 0.66rem;
     letter-spacing: 0.1em;
   }
 
   .view-tabs {
     gap: 0.35rem;
-    padding-top: 0.7rem;
+    padding-top: 0.75rem;
     width: 100%;
   }
 
   .view-tab {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 2.65rem;
-    padding: 0.55rem 0.4rem;
-    font-size: 0.7rem;
+    min-height: 2.7rem;
+    padding: 0.55rem 0.35rem;
+    font-size: 0.68rem;
     letter-spacing: 0.03em;
-    border-radius: 10px;
+    border-radius: 11px;
   }
 
   .parallel-badge {
     margin-top: 0.65rem;
     max-width: 100%;
     font-size: 0.72rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 12px;
   }
 
   .dual-fate {
     width: 100%;
     margin-top: 0.75rem;
-    padding: 0.75rem 0.65rem 0.8rem;
+    padding: 0.75rem 0.7rem 0.8rem;
   }
 
   .dual-fate-kicker {
@@ -2391,43 +2471,41 @@ body.is-key-flash .bg-glow {
   }
 
   .dual-fate-title {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     line-height: 1.35;
   }
 
   /* —— Page / content —— */
   .page {
-    width: calc(100% - 1.1rem);
-    margin-top: 0.65rem;
+    width: calc(100% - 1.2rem);
+    margin-top: 0.7rem;
   }
 
   .layout {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.8rem;
   }
 
   .card-panel,
   .chart-panel {
-    padding: 0.85rem 0.8rem 0.95rem;
+    padding: 0.9rem 0.85rem 1rem;
+    border-radius: 14px;
   }
 
   .news-kicker {
     margin-bottom: 0.55rem;
   }
 
+  /* Vertical news stack — no nested horizontal scroll */
   .news-feed {
-    flex-direction: row;
+    flex-direction: column;
     align-items: stretch;
     gap: 0.65rem;
     max-height: none;
     min-height: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding: 0.15rem 0.1rem 0.45rem;
-    scrollbar-width: thin;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding: 0;
   }
 
   .page.is-compare .news-feed {
@@ -2435,33 +2513,41 @@ body.is-key-flash .bg-glow {
   }
 
   .news-fallback-note {
-    flex: 0 0 min(72vw, 260px);
-    scroll-snap-align: start;
-    align-self: center;
+    flex: none;
+    width: 100%;
     margin: 0;
+    align-self: stretch;
   }
 
   .news-feed > .news-item {
-    flex: 0 0 min(82vw, 310px);
-    width: min(82vw, 310px);
-    max-height: min(58vh, 440px);
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scroll-snap-align: start;
+    flex: none;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    scroll-snap-align: none;
     display: flex;
     flex-direction: column;
   }
 
   .news-feed > .news-item .news-body {
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow: visible;
   }
 
   .news-toggle {
-    min-height: 2.75rem;
-    padding: 0.7rem 0.75rem;
-    font-size: 0.88rem;
+    min-height: 2.85rem;
+    padding: 0.75rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .year-photo {
+    margin-bottom: 0.65rem;
+  }
+
+  .year-photo img {
+    max-height: 220px;
+    width: 100%;
+    object-fit: cover;
   }
 
   .kpi-row {
@@ -2470,7 +2556,7 @@ body.is-key-flash .bg-glow {
   }
 
   .kpi {
-    padding: 0.45rem 0.35rem;
+    padding: 0.5rem 0.4rem;
   }
 
   .barrels-counter {
@@ -2486,49 +2572,40 @@ body.is-key-flash .bg-glow {
   .chart-toggle-btn {
     flex: 1;
     text-align: center;
-    min-height: 2.4rem;
+    min-height: 2.45rem;
     padding: 0.45rem 0.35rem;
     font-size: 0.64rem;
   }
 
   .chart-wrap {
-    height: 210px;
+    height: 220px;
   }
 
-  /* —— Compare —— */
+  /* —— Compare: stack, no sideways swipe —— */
   .page.is-compare {
     display: flex;
+    flex-direction: column;
     grid-template-columns: none;
-    gap: 0.75rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 0.4rem;
-    -webkit-overflow-scrolling: touch;
-    width: calc(100% - 0.7rem);
+    gap: 0.85rem;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+    width: calc(100% - 1.2rem);
   }
 
   .page.is-compare .compare-swipe-hint {
-    position: sticky;
-    left: 0;
-    flex: 0 0 100%;
-    scroll-snap-align: none;
-    font-size: 0.66rem;
+    display: none;
   }
 
-  .page.is-compare .compare-parallel {
-    flex: 0 0 100%;
-    scroll-snap-align: none;
-    width: min(100%, calc(100% - 0.35rem));
-  }
-
+  .page.is-compare .compare-parallel,
   .page.is-compare > .geo-map {
-    flex: 0 0 100%;
+    flex: none;
+    width: 100%;
     scroll-snap-align: none;
-    width: min(100%, calc(100% - 0.35rem));
   }
 
   .compare-parallel {
-    padding: 0.75rem 0.8rem;
+    padding: 0.8rem 0.85rem;
   }
 
   .compare-parallel-grid {
@@ -2558,8 +2635,9 @@ body.is-key-flash .bg-glow {
   }
 
   .page.is-compare .section-block {
-    flex: 0 0 min(90vw, 400px);
-    scroll-snap-align: start;
+    flex: none;
+    width: 100%;
+    scroll-snap-align: none;
   }
 
   .page.is-compare .layout {
@@ -2568,30 +2646,34 @@ body.is-key-flash .bg-glow {
 
   /* —— Map —— */
   .geo-map {
-    margin-top: 0.75rem;
-    padding: 0.7rem 0.65rem 0.85rem;
+    margin-top: 0.85rem;
+    padding: 0.75rem 0.7rem 0.9rem;
   }
 
   .geo-map-stage {
-    aspect-ratio: 360 / 210;
+    aspect-ratio: 360 / 200;
   }
 
   .geo-point {
-    min-width: 14px;
-    min-height: 14px;
+    min-width: 16px;
+    min-height: 16px;
   }
 
   .geo-point-label {
-    font-size: 0.52rem;
+    font-size: 0.54rem;
+    white-space: nowrap;
   }
 
   .geo-point--compact .geo-point-label {
-    font-size: 0.48rem;
+    font-size: 0.5rem;
   }
 
   /* —— Controls —— */
   .controls {
-    padding: 0.55rem 0.7rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    padding:
+      0.55rem
+      0.7rem
+      calc(0.55rem + env(safe-area-inset-bottom, 0px));
   }
 
   .controls-row {
@@ -2604,7 +2686,7 @@ body.is-key-flash .bg-glow {
       "speed speed"
       "play share"
       "slider slider";
-    gap: 0.5rem 0.45rem;
+    gap: 0.45rem 0.45rem;
     align-items: center;
   }
 
@@ -2618,8 +2700,9 @@ body.is-key-flash .bg-glow {
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    gap: 0.12rem;
-    padding: 0.2rem;
+    gap: 0.1rem;
+    padding: 0.18rem;
+    justify-content: space-between;
   }
 
   .play-speed::-webkit-scrollbar {
@@ -2627,10 +2710,10 @@ body.is-key-flash .bg-glow {
   }
 
   .play-speed-btn {
-    flex: 0 0 auto;
-    min-width: 2.15rem;
-    min-height: 2.15rem;
-    padding: 0.35rem 0.4rem;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 2.2rem;
+    padding: 0.35rem 0.2rem;
     font-size: 0.62rem;
   }
 
@@ -2669,6 +2752,8 @@ body.is-key-flash .bg-glow {
     top: auto;
     bottom: calc(var(--controls-h) + 0.55rem);
     width: calc(100% - 1.2rem);
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .year-jump-hint {
@@ -2681,16 +2766,16 @@ body.is-key-flash .bg-glow {
   .finale-card--wide,
   .intro-card,
   .about-camp-card {
-    width: min(100%, calc(100vw - 1.5rem));
-    max-height: min(82vh, 640px);
+    width: min(100%, calc(100vw - 1.4rem));
+    max-height: min(78vh, 640px);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .quiz-option {
-    font-size: 0.84rem;
-    padding: 0.75rem 0.8rem;
-    min-height: 2.75rem;
+    font-size: 0.86rem;
+    padding: 0.8rem 0.85rem;
+    min-height: 2.85rem;
   }
 
   .finale-actions .ctrl-btn {
@@ -2700,52 +2785,43 @@ body.is-key-flash .bg-glow {
 
 @media (max-width: 520px) {
   :root {
-    --controls-h: 13.25rem;
+    --controls-h: 12.25rem;
   }
 
   .site-header {
-    padding: 0.45rem 0.55rem 0.65rem;
+    padding:
+      calc(0.45rem + env(safe-area-inset-top, 0px))
+      0.55rem
+      0.75rem;
+    column-gap: 0.35rem;
   }
 
-  .site-header-brand {
-    padding: 0 4.1rem;
-  }
-
-  .site-header-left {
-    left: 0.4rem;
-  }
-
-  .header-about-links {
-    right: 0.4rem;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .about-camp-link {
-    padding: 0.3rem 0.42rem;
-    font-size: 0.54rem;
-    min-height: 1.75rem;
-    letter-spacing: 0.03em;
-  }
-
-  .site-header-logo {
-    height: 1.7rem;
+  .brand {
+    font-size: 1rem;
   }
 
   .tagline {
     display: none;
   }
 
-  .brand {
-    font-size: 1.08rem;
+  .site-header-logo {
+    height: 1.95rem;
+    width: 1.95rem;
+  }
+
+  .about-camp-link {
+    padding: 0.36rem 0.45rem;
+    font-size: 0.58rem;
+    min-height: 1.95rem;
+    letter-spacing: 0.02em;
   }
 
   .hero {
-    padding: 0.55rem 0.7rem 0.25rem;
+    padding: 0.6rem 0.7rem 0.3rem;
   }
 
   .year-display {
-    font-size: clamp(2.7rem, 17vw, 4rem);
+    font-size: clamp(2.75rem, 16vw, 3.9rem);
   }
 
   .era-label {
@@ -2754,13 +2830,13 @@ body.is-key-flash .bg-glow {
 
   .view-tabs {
     gap: 0.28rem;
-    padding-top: 0.55rem;
+    padding-top: 0.6rem;
   }
 
   .view-tab {
-    min-height: 2.45rem;
-    padding: 0.45rem 0.28rem;
-    font-size: 0.62rem;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.22rem;
+    font-size: 0.6rem;
     letter-spacing: 0.02em;
   }
 
@@ -2773,7 +2849,8 @@ body.is-key-flash .bg-glow {
     font-size: 0.78rem;
   }
 
-  .page {
+  .page,
+  .page.is-compare {
     width: calc(100% - 0.9rem);
     margin-top: 0.55rem;
   }
@@ -2789,17 +2866,6 @@ body.is-key-flash .bg-glow {
 
   .news-feed {
     gap: 0.55rem;
-    padding-bottom: 0.4rem;
-  }
-
-  .news-feed > .news-item {
-    flex-basis: min(86vw, 300px);
-    width: min(86vw, 300px);
-    max-height: min(52vh, 400px);
-  }
-
-  .news-fallback-note {
-    flex-basis: min(70vw, 240px);
   }
 
   .news-kicker,
@@ -2812,11 +2878,11 @@ body.is-key-flash .bg-glow {
   }
 
   .chart-wrap {
-    height: 190px;
+    height: 195px;
   }
 
-  .page.is-compare .section-block {
-    flex: 0 0 min(88vw, 360px);
+  .year-photo img {
+    max-height: 180px;
   }
 
   .parallel-badge {
@@ -2887,18 +2953,20 @@ body.is-key-flash .bg-glow {
   }
 
   .controls {
-    padding: 0.5rem 0.55rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    padding:
+      0.45rem
+      0.55rem
+      calc(0.45rem + env(safe-area-inset-bottom, 0px));
   }
 
   .controls-row {
-    gap: 0.45rem 0.4rem;
+    gap: 0.4rem 0.35rem;
   }
 
   .play-speed-btn {
-    min-width: 2rem;
-    min-height: 2rem;
+    min-height: 2.05rem;
     font-size: 0.58rem;
-    padding: 0.3rem 0.32rem;
+    padding: 0.28rem 0.15rem;
   }
 
   .ctrl-btn {
@@ -2907,7 +2975,7 @@ body.is-key-flash .bg-glow {
   }
 
   .slider-marks {
-    height: 2.2rem;
+    height: 2.15rem;
   }
 
   .slider-mark[data-year="1998"] .slider-mark-label,
