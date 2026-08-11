@@ -36,6 +36,29 @@
     { year: 2026, label: "2026", tag: "Финиш" },
   ];
 
+  // Fewer marks on phones so full years (1991, 2000…) fit without clipping.
+  const MILESTONES_LUKOIL_MOBILE = [
+    { year: 1991, label: "1991", tag: "Старт" },
+    { year: 2000, label: "2000" },
+    { year: 2010, label: "2010" },
+    { year: 2015, label: "2015", tag: "Сириус" },
+    { year: 2026, label: "2026", tag: "Финиш" },
+  ];
+
+  const MILESTONES_SIRIUS_MOBILE = [
+    { year: 2007, label: "2007", tag: "Парк" },
+    { year: 2014, label: "2014", tag: "Олимпиада" },
+    { year: 2020, label: "2020", tag: "ФТ" },
+    { year: 2026, label: "2026", tag: "Финиш" },
+  ];
+
+  const MILESTONES_COMPARE_MOBILE = [
+    { year: 1991, label: "1991", tag: "Старт" },
+    { year: 2007, label: "2007", tag: "Парк" },
+    { year: 2015, label: "2015", tag: "Сириус" },
+    { year: 2026, label: "2026", tag: "Финиш" },
+  ];
+
   // Важные годы ЛУКОЙЛ = вехи на шкале (старт, IPO/рост, глобализация, партнёрства, Сириус, цифр., финиш)
   const KEY_YEARS_LUKOIL = new Set([1991, 1998, 2000, 2008, 2010, 2015, 2020, 2026]);
   const KEY_YEARS_SIRIUS = new Set([2007, 2014, 2015, 2020, 2026]);
@@ -229,10 +252,15 @@
     return currentView === "sirius" ? SIRIUS_MIN_YEAR : MIN_YEAR;
   }
 
+  function isCompactMilestones() {
+    return window.matchMedia("(max-width: 860px)").matches;
+  }
+
   function activeMilestones() {
-    if (currentView === "sirius") return MILESTONES_SIRIUS;
-    if (currentView === "compare") return MILESTONES_COMPARE;
-    return MILESTONES_LUKOIL;
+    const compact = isCompactMilestones();
+    if (currentView === "sirius") return compact ? MILESTONES_SIRIUS_MOBILE : MILESTONES_SIRIUS;
+    if (currentView === "compare") return compact ? MILESTONES_COMPARE_MOBILE : MILESTONES_COMPARE;
+    return compact ? MILESTONES_LUKOIL_MOBILE : MILESTONES_LUKOIL;
   }
 
   function clampYear(year) {
@@ -1419,25 +1447,28 @@
   }
 
   function buildMilestones() {
-    const shortLabels = window.matchMedia("(max-width: 520px)").matches;
-    sliderMarks.innerHTML = activeMilestones()
-      .map((m) => {
+    const marks = activeMilestones();
+    const compact = isCompactMilestones();
+    sliderMarks.innerHTML = marks
+      .map((m, index) => {
         const left = milestoneLeftPercent(m.year);
-        const label = shortLabels ? String(m.year).slice(-2) : m.label;
-        // Tags crowd the bar on phones — years only there.
+        const edge =
+          index === 0 ? "start" : index === marks.length - 1 ? "end" : "mid";
+        // Tags crowd the phone bar — keep full year labels only.
         const tag =
-          !shortLabels && m.tag
+          !compact && m.tag
             ? `<span class="slider-mark-tag">${m.tag}</span>`
             : "";
         return `
         <button
           type="button"
-          class="slider-mark${m.tag && !shortLabels ? " has-tag" : ""}"
+          class="slider-mark${m.tag && !compact ? " has-tag" : ""}"
           data-year="${m.year}"
+          data-edge="${edge}"
           style="left:${left}%"
           title="${m.tag ? `${m.tag} · ${m.year}` : `Перейти к ${m.year}`}"
         >
-          <span class="slider-mark-label">${label}</span>
+          <span class="slider-mark-label">${m.label}</span>
           ${tag}
         </button>`;
       })
@@ -1645,7 +1676,7 @@
       });
     });
 
-    const milestoneMq = window.matchMedia("(max-width: 520px)");
+    const milestoneMq = window.matchMedia("(max-width: 860px)");
     const onMilestoneMq = () => buildMilestones();
     if (milestoneMq.addEventListener) milestoneMq.addEventListener("change", onMilestoneMq);
     else if (milestoneMq.addListener) milestoneMq.addListener(onMilestoneMq);

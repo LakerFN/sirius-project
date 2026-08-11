@@ -2767,11 +2767,34 @@ body.is-key-flash .bg-glow {
   .slider-marks {
     height: 1.35rem;
     margin-top: 0.2rem;
+    overflow: visible;
+  }
+
+  .slider-mark {
+    white-space: nowrap;
+  }
+
+  .slider-mark[data-edge="start"] {
+    transform: none;
+  }
+
+  .slider-mark[data-edge="end"] {
+    transform: translateX(-100%);
   }
 
   .slider-mark::before {
     height: 6px;
     margin-bottom: 0.1rem;
+  }
+
+  .slider-mark[data-edge="start"]::before {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .slider-mark[data-edge="end"]::before {
+    margin-left: auto;
+    margin-right: 0;
   }
 
   .slider-mark.is-active::before,
@@ -2780,8 +2803,9 @@ body.is-key-flash .bg-glow {
   }
 
   .slider-mark-label {
-    font-size: 0.58rem;
+    font-size: 0.62rem;
     letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
   }
 
   /* Tags eat height and hide years — years first on phone */
@@ -3028,12 +3052,12 @@ body.is-key-flash .bg-glow {
   }
 
   .slider-marks {
-    height: 1.15rem;
+    height: 1.25rem;
     margin-top: 0.12rem;
   }
 
   .slider-mark-label {
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-variant-numeric: tabular-nums;
   }
 
