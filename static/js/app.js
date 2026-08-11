@@ -1419,21 +1419,25 @@
   }
 
   function buildMilestones() {
+    const shortLabels = window.matchMedia("(max-width: 520px)").matches;
     sliderMarks.innerHTML = activeMilestones()
       .map((m) => {
         const left = milestoneLeftPercent(m.year);
-        const tag = m.tag
-          ? `<span class="slider-mark-tag">${m.tag}</span>`
-          : "";
+        const label = shortLabels ? String(m.year).slice(-2) : m.label;
+        // Tags crowd the bar on phones — years only there.
+        const tag =
+          !shortLabels && m.tag
+            ? `<span class="slider-mark-tag">${m.tag}</span>`
+            : "";
         return `
         <button
           type="button"
-          class="slider-mark${m.tag ? " has-tag" : ""}"
+          class="slider-mark${m.tag && !shortLabels ? " has-tag" : ""}"
           data-year="${m.year}"
           style="left:${left}%"
           title="${m.tag ? `${m.tag} · ${m.year}` : `Перейти к ${m.year}`}"
         >
-          <span class="slider-mark-label">${m.label}</span>
+          <span class="slider-mark-label">${label}</span>
           ${tag}
         </button>`;
       })
@@ -1640,6 +1644,11 @@
         updateOilChart(clampYear(slider.value));
       });
     });
+
+    const milestoneMq = window.matchMedia("(max-width: 520px)");
+    const onMilestoneMq = () => buildMilestones();
+    if (milestoneMq.addEventListener) milestoneMq.addEventListener("change", onMilestoneMq);
+    else if (milestoneMq.addListener) milestoneMq.addListener(onMilestoneMq);
 
     const siteHeader = document.getElementById("site-header");
     const headerToggle = document.getElementById("header-toggle");

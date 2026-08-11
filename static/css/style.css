@@ -2247,7 +2247,7 @@ body.is-key-flash .bg-glow {
 
 @media (max-width: 860px) {
   :root {
-    --controls-h: 11.75rem;
+    --controls-h: 8.25rem;
   }
 
   html,
@@ -2668,12 +2668,12 @@ body.is-key-flash .bg-glow {
     font-size: 0.5rem;
   }
 
-  /* —— Controls —— */
+  /* —— Controls (compact) —— */
   .controls {
     padding:
+      0.4rem
       0.55rem
-      0.7rem
-      calc(0.55rem + env(safe-area-inset-bottom, 0px));
+      calc(0.35rem + env(safe-area-inset-bottom, 0px));
   }
 
   .controls-row {
@@ -2681,12 +2681,11 @@ body.is-key-flash .bg-glow {
     max-width: none;
     margin: 0;
     padding: 0;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "speed speed"
-      "play share"
-      "slider slider";
-    gap: 0.45rem 0.45rem;
+      "play speed share"
+      "slider slider slider";
+    gap: 0.35rem 0.35rem;
     align-items: center;
   }
 
@@ -2700,8 +2699,8 @@ body.is-key-flash .bg-glow {
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    gap: 0.1rem;
-    padding: 0.18rem;
+    gap: 0;
+    padding: 0.1rem;
     justify-content: space-between;
   }
 
@@ -2712,19 +2711,30 @@ body.is-key-flash .bg-glow {
   .play-speed-btn {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 2.2rem;
-    padding: 0.35rem 0.2rem;
-    font-size: 0.62rem;
+    min-height: 1.85rem;
+    padding: 0.2rem 0.1rem;
+    font-size: 0.58rem;
   }
 
   .ctrl-btn--play {
     grid-area: play;
-    justify-self: stretch;
+    justify-self: start;
+    width: auto;
+    min-width: 0;
+    padding: 0.4rem 0.65rem;
+    min-height: 1.85rem;
+    font-size: 0.62rem;
+    gap: 0.3rem;
   }
 
   #share-frame-btn {
     grid-area: share;
-    justify-self: stretch;
+    justify-self: end;
+    width: auto;
+    min-width: 0;
+    padding: 0.4rem 0.65rem;
+    min-height: 1.85rem;
+    font-size: 0.62rem;
   }
 
   .slider-block {
@@ -2733,18 +2743,59 @@ body.is-key-flash .bg-glow {
   }
 
   .ctrl-btn {
-    width: 100%;
     justify-content: center;
-    min-height: 2.75rem;
-    padding: 0.6rem 0.7rem;
   }
 
   .slider-label {
-    font-size: 0.68rem;
+    display: none;
+  }
+
+  #year-slider {
+    height: 3px;
+  }
+
+  #year-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  #year-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
   }
 
   .slider-marks {
-    height: 2.35rem;
+    height: 1.35rem;
+    margin-top: 0.2rem;
+  }
+
+  .slider-mark::before {
+    height: 6px;
+    margin-bottom: 0.1rem;
+  }
+
+  .slider-mark.is-active::before,
+  .slider-mark:hover::before {
+    height: 8px;
+  }
+
+  .slider-mark-label {
+    font-size: 0.58rem;
+    letter-spacing: 0;
+  }
+
+  /* Tags eat height and hide years — years first on phone */
+  .slider-mark-tag {
+    display: none;
+  }
+
+  .play-icon {
+    border-width: 5px 0 5px 8px;
+  }
+
+  .ctrl-btn--play.is-playing .play-icon {
+    width: 7px;
+    height: 9px;
   }
 
   /* —— Overlays / modals —— */
@@ -2785,7 +2836,7 @@ body.is-key-flash .bg-glow {
 
 @media (max-width: 520px) {
   :root {
-    --controls-h: 12.25rem;
+    --controls-h: 7.75rem;
   }
 
   .site-header {
@@ -2954,39 +3005,36 @@ body.is-key-flash .bg-glow {
 
   .controls {
     padding:
-      0.45rem
-      0.55rem
-      calc(0.45rem + env(safe-area-inset-bottom, 0px));
+      0.3rem
+      0.4rem
+      calc(0.25rem + env(safe-area-inset-bottom, 0px));
   }
 
   .controls-row {
-    gap: 0.4rem 0.35rem;
+    gap: 0.25rem 0.25rem;
   }
 
   .play-speed-btn {
-    min-height: 2.05rem;
-    font-size: 0.58rem;
-    padding: 0.28rem 0.15rem;
+    min-height: 1.65rem;
+    font-size: 0.52rem;
+    padding: 0.12rem 0.04rem;
   }
 
-  .ctrl-btn {
-    min-height: 2.55rem;
-    font-size: 0.72rem;
+  .ctrl-btn--play,
+  #share-frame-btn {
+    min-height: 1.65rem;
+    padding: 0.28rem 0.45rem;
+    font-size: 0.56rem;
   }
 
   .slider-marks {
-    height: 2.15rem;
+    height: 1.15rem;
+    margin-top: 0.12rem;
   }
 
-  .slider-mark[data-year="1998"] .slider-mark-label,
-  .slider-mark[data-year="2008"] .slider-mark-label,
-  .slider-mark[data-year="2013"] .slider-mark-label,
-  .slider-mark[data-year="2024"] .slider-mark-label {
-    display: none;
-  }
-
-  .slider-mark-tag {
-    font-size: 0.5rem;
+  .slider-mark-label {
+    font-size: 0.55rem;
+    font-variant-numeric: tabular-nums;
   }
 
   .theme-tip {
