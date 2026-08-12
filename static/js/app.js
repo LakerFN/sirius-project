@@ -212,6 +212,8 @@
   const shareFrameBtn = document.getElementById("share-frame-btn");
   const playSpeedGroup = document.getElementById("play-speed");
   const shareCanvas = document.getElementById("share-canvas");
+  const scrubHint = document.getElementById("scrub-year-hint");
+  const scrubYearValue = document.getElementById("scrub-year-value");
   const panelLukoil = document.getElementById("panel-lukoil");
   const panelSirius = document.getElementById("panel-sirius");
   const page = document.getElementById("page");
@@ -243,6 +245,55 @@
   let quizCorrect = 0;
   let audioCtx = null;
   let playSpeed = 1;
+  let scrubHideTimer = null;
+
+  function isMobileLayout() {
+    return window.matchMedia("(max-width: 860px)").matches;
+  }
+
+  function showScrubHint(year) {
+    if (!scrubHint || !scrubYearValue || !isMobileLayout()) return;
+    clearTimeout(scrubHideTimer);
+    scrubYearValue.textContent = String(year);
+    scrubHint.classList.add("is-visible");
+    scrubHint.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-scrubbing");
+  }
+
+  function hideScrubHint({ delay = 0 } = {}) {
+    if (!scrubHint) return;
+    clearTimeout(scrubHideTimer);
+    const hide = () => {
+      scrubHint.classList.remove("is-visible");
+      scrubHint.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-scrubbing");
+    };
+    if (delay > 0) scrubHideTimer = setTimeout(hide, delay);
+    else hide();
+  }
+
+  function applyChartLayout() {
+    if (!oilChart || !techChart) return;
+    const mobile = isMobileLayout();
+    [oilChart, techChart].forEach((chart) => {
+      chart.options.scales.x.ticks.maxTicksLimit = mobile ? 5 : undefined;
+      chart.options.scales.x.ticks.autoSkipPadding = mobile ? 8 : 12;
+      chart.options.scales.x.ticks.font = { family: "Manrope", size: mobile ? 10 : 12, weight: "700" };
+      chart.options.scales.y.ticks.font = { family: "Manrope", size: mobile ? 10 : 12, weight: "700" };
+      chart.options.scales.y.title.display = !mobile;
+      if (chart.data.datasets[0]) {
+        chart.data.datasets[0].pointRadius = mobile ? 2.5 : 3;
+        chart.data.datasets[0].borderWidth = mobile ? 2 : 2.5;
+      }
+      chart.update("none");
+    });
+  }
+
+  let chartLayoutTimer = null;
+  function scheduleChartLayout() {
+    clearTimeout(chartLayoutTimer);
+    chartLayoutTimer = setTimeout(applyChartLayout, 120);
+  }
   let audioUnlocked = false;
   let tickBuffer = null;
   let tickBufferLoading = null;
@@ -1606,6 +1657,9 @@
       },
       options: techOptions,
     });
+
+    applyChartLayout();
+    window.addEventListener("resize", scheduleChartLayout);
   }
 
   function bindControls() {
@@ -1621,6 +1675,7 @@
     const endDrag = () => {
       if (!sliderDragging) return;
       sliderDragging = false;
+      hideScrubHint({ delay: 180 });
       onYearChange(clampYear(slider.value), {
         withSound: false,
         animateCounters: true,
@@ -1633,9 +1688,11 @@
       stopPlay();
       stopSliderAnim();
       sliderDragging = true;
+      showScrubHint(clampYear(slider.value));
     });
     slider.addEventListener("touchstart", () => {
       unlockAudio();
+      showScrubHint(clampYear(slider.value));
     }, { passive: true });
 
     slider.addEventListener("pointerup", endDrag);
@@ -1646,6 +1703,7 @@
       unlockAudio();
       stopPlay();
       const y = clampYear(slider.value);
+      showScrubHint(y);
       if (y !== lastYear) {
         onYearChange(y, { withSound: true, animateCounters: false, syncSlider: false });
       }

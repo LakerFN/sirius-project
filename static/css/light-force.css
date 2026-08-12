@@ -168,7 +168,7 @@ html[data-theme="light"] #year-slider::-moz-range-thumb {
   }
 
   html[data-theme="light"] .view-tab {
-    min-height: 2.7rem;
+    min-height: 2.65rem;
   }
 
   html[data-theme="light"] .controls .ctrl-btn--play,
@@ -178,6 +178,16 @@ html[data-theme="light"] #year-slider::-moz-range-thumb {
 
   html[data-theme="light"] .about-camp-link {
     background: #f0ecef !important;
+  }
+
+  html[data-theme="light"] .scrub-year-hint-value {
+    background: #f0ecef !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  html[data-theme="light"] .kpi {
+    background: #e8e4e7 !important;
   }
 }
 

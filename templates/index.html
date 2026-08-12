@@ -17,14 +17,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/style.css?v=20260811f" />
-  <link rel="stylesheet" href="/static/css/light-force.css?v=20260811f" />
+  <link rel="stylesheet" href="/static/css/style.css?v=20260812m" />
+  <link rel="stylesheet" href="/static/css/light-force.css?v=20260812m" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
-  <script src="/static/js/app.js?v=20260811d" defer></script>
+  <script src="/static/js/app.js?v=20260812m" defer></script>
 </head>
 <body data-view="lukoil">
   <div class="bg-glow" aria-hidden="true"></div>
   <div id="theme-veil" class="theme-veil" aria-hidden="true"></div>
+
+  <div id="scrub-year-hint" class="scrub-year-hint" aria-hidden="true">
+    <span id="scrub-year-value" class="scrub-year-hint-value">1991</span>
+  </div>
 
   <header
     class="site-header"
@@ -396,12 +400,15 @@
   <footer class="controls">
     <div class="controls-row">
       <div class="play-speed" id="play-speed" role="group" aria-label="Скорость прокрутки">
-        <button type="button" class="play-speed-btn" data-speed="0.1" aria-pressed="false" title="50 сек на год">0.1×</button>
-        <button type="button" class="play-speed-btn" data-speed="0.5" aria-pressed="false" title="10 сек на год">0.5×</button>
-        <button type="button" class="play-speed-btn is-active" data-speed="1" aria-pressed="true" title="5 сек на год">1×</button>
-        <button type="button" class="play-speed-btn" data-speed="2" aria-pressed="false" title="2,5 сек на год">2×</button>
-        <button type="button" class="play-speed-btn" data-speed="3" aria-pressed="false" title="≈1,7 сек на год">3×</button>
-        <button type="button" class="play-speed-btn" data-speed="5" aria-pressed="false" title="1 сек на год">5×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop" data-speed="0.1" aria-pressed="false" title="50 сек на год">0.1×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop" data-speed="0.5" aria-pressed="false" title="10 сек на год">0.5×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop is-active" data-speed="1" aria-pressed="true" title="5 сек на год">1×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop" data-speed="2" aria-pressed="false" title="2,5 сек на год">2×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop" data-speed="3" aria-pressed="false" title="≈1,7 сек на год">3×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--desktop" data-speed="5" aria-pressed="false" title="1 сек на год">5×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--mobile" data-speed="0.5" aria-pressed="false" title="10 сек на год">Медл</button>
+        <button type="button" class="play-speed-btn play-speed-btn--mobile is-active" data-speed="1" aria-pressed="true" title="5 сек на год">1×</button>
+        <button type="button" class="play-speed-btn play-speed-btn--mobile" data-speed="3" aria-pressed="false" title="≈1,7 сек на год">Быстр</button>
       </div>
 
       <button type="button" id="play-btn" class="ctrl-btn ctrl-btn--play" aria-pressed="false" title="Автопрокрутка лет">

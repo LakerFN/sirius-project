@@ -1201,6 +1201,14 @@ body[data-view="compare"] .about-camp-link--sirius {
   color: var(--accent);
 }
 
+.play-speed-btn--mobile {
+  display: none;
+}
+
+.scrub-year-hint {
+  display: none;
+}
+
 .ctrl-btn {
   appearance: none;
   border: 1px solid var(--line);
@@ -2270,29 +2278,30 @@ body.is-key-flash .bg-glow {
     touch-action: manipulation;
   }
 
-  /* —— Header: real grid, no absolute squeeze —— */
+  /* —— Header: 2 rows — brand, then logos + about —— */
   .site-header {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas: "left brand about";
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand brand"
+      "left about";
     align-items: center;
-    column-gap: 0.45rem;
-    row-gap: 0.35rem;
+    column-gap: 0.5rem;
+    row-gap: 0.45rem;
     padding:
-      calc(0.55rem + env(safe-area-inset-top, 0px))
-      0.7rem
-      0.85rem;
+      calc(0.5rem + env(safe-area-inset-top, 0px))
+      0.75rem
+      0.55rem;
   }
 
   .site-header.is-collapsed {
     padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: 0;
+    padding-bottom: 0.55rem;
     min-height: 0;
   }
 
   .site-header.is-collapsed .site-header-left,
-  .site-header.is-collapsed .header-about-links,
-  .site-header.is-collapsed .site-header-inner {
+  .site-header.is-collapsed .header-about-links {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -2304,9 +2313,13 @@ body.is-key-flash .bg-glow {
     pointer-events: none;
   }
 
+  .site-header.is-collapsed .site-header-inner {
+    opacity: 0.35;
+  }
+
   .site-header-inner {
     grid-area: brand;
-    width: auto;
+    width: 100%;
     max-width: none;
     margin: 0;
     max-height: none;
@@ -2322,15 +2335,16 @@ body.is-key-flash .bg-glow {
   }
 
   .brand {
-    font-size: clamp(1.05rem, 4.4vw, 1.4rem);
-    line-height: 1.12;
+    font-size: clamp(1.1rem, 4.6vw, 1.45rem);
+    line-height: 1.15;
   }
 
   .tagline {
-    font-size: 0.62rem;
-    margin-top: 0.14rem;
+    font-size: 0.64rem;
+    margin-top: 0.12rem;
     letter-spacing: 0.01em;
     line-height: 1.25;
+    color: var(--muted);
   }
 
   .site-header-left {
@@ -2339,8 +2353,9 @@ body.is-key-flash .bg-glow {
     top: auto;
     transform: none;
     grid-area: left;
+    justify-self: start;
     max-width: none;
-    gap: 0.3rem;
+    gap: 0.35rem;
     align-items: center;
     z-index: auto;
   }
@@ -2350,14 +2365,14 @@ body.is-key-flash .bg-glow {
   }
 
   .site-header-logos {
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
 
   .site-header-logo {
-    height: 2.15rem;
-    width: 2.15rem;
+    height: 2.25rem;
+    width: 2.25rem;
     object-fit: cover;
-    border-radius: 7px;
+    border-radius: 8px;
   }
 
   .header-about-links {
@@ -2366,38 +2381,87 @@ body.is-key-flash .bg-glow {
     top: auto;
     transform: none;
     grid-area: about;
+    justify-self: end;
     flex-direction: row;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.35rem;
     z-index: auto;
   }
 
   .about-camp-link-full {
-    display: none;
-  }
-
-  .about-camp-link-short {
     display: inline;
   }
 
+  .about-camp-link-short {
+    display: none;
+  }
+
   .about-camp-link {
-    padding: 0.42rem 0.55rem;
-    font-size: 0.62rem;
-    border-radius: 8px;
+    padding: 0.38rem 0.6rem;
+    font-size: 0.64rem;
+    border-radius: 999px;
     text-align: center;
-    min-height: 2.1rem;
+    min-height: 2rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    letter-spacing: 0.03em;
   }
 
   .header-toggle {
-    bottom: -1px;
+    display: none;
+  }
+
+  /* Scrub year overlay */
+  .scrub-year-hint {
+    display: block;
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--controls-h) + 1.5rem);
+    z-index: 35;
+    transform: translateX(-50%) translateY(8px) scale(0.92);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.18s ease,
+      transform 0.22s ease,
+      visibility 0.18s ease;
+  }
+
+  .scrub-year-hint.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .scrub-year-hint-value {
+    display: block;
+    padding: 0.35rem 1.1rem 0.45rem;
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 18vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    text-shadow:
+      0 0 40px color-mix(in srgb, var(--accent) 45%, transparent),
+      0 4px 24px rgba(0, 0, 0, 0.45);
+    background: color-mix(in srgb, var(--panel) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  body.is-scrubbing .hero .year-display {
+    opacity: 0.35;
+    transition: opacity 0.18s ease;
   }
 
   /* —— Hero —— */
   .hero {
-    padding: 1.55rem 0.85rem 0.4rem;
+    padding: 1.1rem 0.85rem 0.35rem;
   }
 
   .year-display {
@@ -2419,11 +2483,12 @@ body.is-key-flash .bg-glow {
   .view-tab {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 2.7rem;
+    min-height: 2.65rem;
     padding: 0.55rem 0.35rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.03em;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
     border-radius: 11px;
+    font-weight: 800;
   }
 
   .parallel-badge {
@@ -2488,12 +2553,63 @@ body.is-key-flash .bg-glow {
 
   .card-panel,
   .chart-panel {
-    padding: 0.9rem 0.85rem 1rem;
-    border-radius: 14px;
+    padding: 0.95rem 0.9rem 1.05rem;
+    border-radius: 16px;
+    border-color: color-mix(in srgb, var(--line) 65%, transparent);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
   }
 
   .news-kicker {
-    margin-bottom: 0.55rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+    font-weight: 800;
+  }
+
+  .news-body {
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .news-body > p {
+    font-weight: 600;
+  }
+
+  .news-toggle {
+    font-weight: 800;
+  }
+
+  .chart-head {
+    margin-bottom: 0.35rem;
+  }
+
+  .chart-title {
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .chart-sub {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .kpi {
+    background: color-mix(in srgb, var(--panel) 88%, var(--accent));
+    border-radius: 10px;
+  }
+
+  .barrels-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    font-weight: 800;
+  }
+
+  .barrels-unit {
+    font-size: 0.62rem;
+    font-weight: 600;
   }
 
   /* Vertical news stack — no nested horizontal scroll */
@@ -2578,7 +2694,7 @@ body.is-key-flash .bg-glow {
   }
 
   .chart-wrap {
-    height: 220px;
+    height: 250px;
   }
 
   /* —— Compare: stack, no sideways swipe —— */
@@ -2671,9 +2787,9 @@ body.is-key-flash .bg-glow {
   /* —— Controls (compact) —— */
   .controls {
     padding:
-      0.4rem
+      0.38rem
       0.55rem
-      calc(0.35rem + env(safe-area-inset-bottom, 0px));
+      calc(0.32rem + env(safe-area-inset-bottom, 0px));
   }
 
   .controls-row {
@@ -2685,8 +2801,18 @@ body.is-key-flash .bg-glow {
     grid-template-areas:
       "play speed share"
       "slider slider slider";
-    gap: 0.35rem 0.35rem;
+    gap: 0.32rem 0.32rem;
     align-items: center;
+  }
+
+  .play-speed-btn--desktop {
+    display: none;
+  }
+
+  .play-speed-btn--mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .play-speed {
@@ -2695,25 +2821,19 @@ body.is-key-flash .bg-glow {
     width: 100%;
     max-width: 100%;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0;
-    padding: 0.1rem;
-    justify-content: space-between;
-  }
-
-  .play-speed::-webkit-scrollbar {
-    display: none;
+    overflow: visible;
+    gap: 0.2rem;
+    padding: 0.12rem;
+    justify-content: stretch;
   }
 
   .play-speed-btn {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 1.85rem;
-    padding: 0.2rem 0.1rem;
-    font-size: 0.58rem;
+    min-height: 2rem;
+    padding: 0.28rem 0.35rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
   }
 
   .controls .ctrl-btn--play {
@@ -2866,43 +2986,47 @@ body.is-key-flash .bg-glow {
 
 @media (max-width: 520px) {
   :root {
-    --controls-h: 7.75rem;
+    --controls-h: 7.65rem;
   }
 
   .site-header {
     padding:
       calc(0.45rem + env(safe-area-inset-top, 0px))
-      0.55rem
-      0.75rem;
-    column-gap: 0.35rem;
+      0.6rem
+      0.5rem;
+    row-gap: 0.38rem;
   }
 
   .brand {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .tagline {
-    display: none;
+    font-size: 0.58rem;
   }
 
   .site-header-logo {
-    height: 1.95rem;
-    width: 1.95rem;
+    height: 2.05rem;
+    width: 2.05rem;
   }
 
   .about-camp-link {
-    padding: 0.36rem 0.45rem;
-    font-size: 0.58rem;
-    min-height: 1.95rem;
-    letter-spacing: 0.02em;
+    padding: 0.34rem 0.52rem;
+    font-size: 0.6rem;
+    min-height: 1.9rem;
   }
 
   .hero {
-    padding: 1.35rem 0.7rem 0.3rem;
+    padding: 0.95rem 0.7rem 0.3rem;
+  }
+
+  .scrub-year-hint-value {
+    font-size: clamp(2.85rem, 19vw, 4rem);
+    padding: 0.3rem 0.95rem 0.4rem;
   }
 
   .year-display {
-    font-size: clamp(2.75rem, 16vw, 3.9rem);
+    font-size: clamp(2.65rem, 15vw, 3.75rem);
   }
 
   .era-label {
@@ -2915,10 +3039,10 @@ body.is-key-flash .bg-glow {
   }
 
   .view-tab {
-    min-height: 2.5rem;
-    padding: 0.45rem 0.22rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.02em;
+    min-height: 2.45rem;
+    padding: 0.45rem 0.25rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
   }
 
   .dual-fate {
@@ -2959,7 +3083,7 @@ body.is-key-flash .bg-glow {
   }
 
   .chart-wrap {
-    height: 195px;
+    height: 235px;
   }
 
   .year-photo img {
@@ -3045,9 +3169,9 @@ body.is-key-flash .bg-glow {
   }
 
   .play-speed-btn {
-    min-height: 1.65rem;
-    font-size: 0.52rem;
-    padding: 0.12rem 0.04rem;
+    min-height: 1.9rem;
+    font-size: 0.64rem;
+    padding: 0.24rem 0.28rem;
   }
 
   .controls .ctrl-btn--play,
